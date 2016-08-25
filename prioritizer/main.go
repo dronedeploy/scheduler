@@ -18,7 +18,7 @@ func main() {
 
 	wg.Add(1)
 	//go reconcileUnscheduledPods(2, doneChan, &wg)
-	go prioritizePods(2, doneChan, &wg)
+	go prioritizePods(10, doneChan, &wg)
 
 	signalChan := make(chan os.Signal, 1)
 	signal.Notify(signalChan, syscall.SIGINT, syscall.SIGTERM)

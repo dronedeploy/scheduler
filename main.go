@@ -35,7 +35,7 @@ func main() {
 
 	//TODO: add exponential backoff
 	wg.Add(1)
-	go reconcileUnscheduledPods(2, doneChan, &wg)
+	go reconcileUnscheduledPods(10, doneChan, &wg)
 
 	signalChan := make(chan os.Signal, 1)
 	signal.Notify(signalChan, syscall.SIGINT, syscall.SIGTERM)
