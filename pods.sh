@@ -10,10 +10,12 @@ metadata:
   annotations:
     "scheduler.alpha.kubernetes.io/name": priority
     "k8s_priority": "PRIORITY"
-  generateName: pausePRIORITY-
+  generateName: pause-
   labels:
     app: pause
     priority: "PRIORITY"
+    valueMult: "VALUE"
+    expectedDuration: "DURATION"
 spec:
   containers:
   - image: gcr.io/google_containers/pause:2.0
@@ -26,5 +28,7 @@ END
 )
 
 for n in $(seq 1 $MAX); do
-    echo "$TEMPLATE" | sed "s/PRIORITY/$n/g" | kubectl create -f - --validate=false
+    VALUE="$(( ( RANDOM % 10 )  + 1 ))"
+    DURATION="$(( ( RANDOM % 1000 )  + 1 ))"
+    echo "$TEMPLATE" | sed "s/PRIORITY/$n/g" | sed "s/VALUE/$VALUE/g" | sed "s/DURATION/$DURATION/g" | kubectl create -f - --validate=false
 done
