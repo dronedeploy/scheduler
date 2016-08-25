@@ -22,7 +22,7 @@ spec:
     name: pause
     resources:
       requests:
-        cpu: 400m
+        cpu: 300m
         memory: 100Mi
 END
 )
