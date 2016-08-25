@@ -14,6 +14,7 @@
 package main
 
 import (
+	"container/heap"
 	"fmt"
 	"log"
 	"sync"
@@ -87,11 +88,20 @@ func schedulePods() error {
 	if err != nil {
 		return err
 	}
+	//TODO: it is HORRIBLY inefficient to recreate this queue every cycle, but it is much easier than handling the myriad error cases of syncronization
+	pq := NewPriorityQueue(MetaNamespaceKeyFunc)
 	for _, pod := range pods {
-		err := schedulePod(pod)
-		if err != nil {
-			log.Println(err)
-		}
+		heap.Push(pq, pod)
+	}
+	if pq.Len() == 0 {
+		return nil
+	}
+	pod := heap.Pop(pq).(Pod)
+	schedule_err := schedulePod(&pod)
+	if schedule_err != nil {
+		log.Println(schedule_err)
+		heap.Push(pq, pod)
+		time.Sleep(time.Second * 2)
 	}
 	return nil
 }

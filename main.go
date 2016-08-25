@@ -21,7 +21,7 @@ import (
 	"syscall"
 )
 
-const schedulerName = "hightower"
+const schedulerName = "priority"
 
 func main() {
 	log.Println("Starting custom scheduler...")
@@ -29,11 +29,12 @@ func main() {
 	doneChan := make(chan struct{})
 	var wg sync.WaitGroup
 
-	wg.Add(1)
-	go monitorUnscheduledPods(doneChan, &wg)
+	//TODO: watch would be more efficient, but using reconcile exclusively for now
+	//wg.Add(1)
+	//go monitorUnscheduledPods(doneChan, &wg)
 
 	wg.Add(1)
-	go reconcileUnscheduledPods(30, doneChan, &wg)
+	go reconcileUnscheduledPods(2, doneChan, &wg)
 
 	signalChan := make(chan os.Signal, 1)
 	signal.Notify(signalChan, syscall.SIGINT, syscall.SIGTERM)

@@ -147,9 +147,9 @@ func watchUnscheduledPods() (<-chan Pod, <-chan error) {
 	return pods, errc
 }
 
-func getUnscheduledPods() ([]*Pod, error) {
+func getUnscheduledPods() ([]Pod, error) {
 	var podList PodList
-	unscheduledPods := make([]*Pod, 0)
+	unscheduledPods := make([]Pod, 0)
 
 	v := url.Values{}
 	v.Set("fieldSelector", "spec.nodeName=")
@@ -177,7 +177,7 @@ func getUnscheduledPods() ([]*Pod, error) {
 
 	for _, pod := range podList.Items {
 		if pod.Metadata.Annotations["scheduler.alpha.kubernetes.io/name"] == schedulerName {
-			unscheduledPods = append(unscheduledPods, &pod)
+			unscheduledPods = append(unscheduledPods, pod)
 		}
 	}
 
